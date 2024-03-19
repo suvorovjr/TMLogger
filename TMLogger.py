@@ -29,19 +29,14 @@ class TMLogger:
             get_plugin(PLUGIN_NAME, PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
 
         options = webdriver.ChromeOptions()
-        options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_argument("start-maximized")
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_extension(self.plugin_name)
-        if self.user_agent:
-            options.add_argument(f'--user-agent={self.user_agent}')
+        options.add_argument("--disable-blink-features")
+        options.add_argument("--disable-blink-features=AutomationControlled")
         driver = webdriver.Chrome(options=options)
-        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-            "source":
-                "const newProto = navigator.__proto__;"
-                "delete newProto.webdriver;"
-                "navigator.__proto__ = newProto;"
-        })
+        if self.user_agent:
+            driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": self.user_agent})
         return driver
 
     def tm_login(self):
@@ -65,8 +60,8 @@ class TMLogger:
         driver.quit()
 
 
-my_login = 'martynov99jura91736x@rambler.ua'
-my_password = '515G6635'
+my_login = 'osipov2012vova82287o@rambler.ua'
+my_password = '1SG3V5DU'
 my_user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 YaBrowser/24.1.0.0 Safari/537.36'
-logger = TMLogger(login=my_login, password=my_password, plugin_name=PLUGIN_NAME, user_agent=my_user_agent)
+logger = TMLogger(login=my_login, password=my_password, plugin_name=PLUGIN_NAME)
 logger.tm_login()
